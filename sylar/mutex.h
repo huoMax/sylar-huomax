@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 19:55:12
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:08:39
- * @FilePath: /sylar-huomax/sylar/mutex.h
- * @Description: 锁、信号量封装
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #ifndef __SYLAR_MUTEX_H__
 #define __SYLAR_MUTEX_H__
 

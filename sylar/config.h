@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 19:55:22
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:18:39
- * @FilePath: /sylar-huomax/sylar/config.h
- * @Description: 配置模块实现
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #ifndef __SYLAR_CONFIG_H__
 #define __SYLAR_CONFIG_H__
 

@@ -1,12 +1,6 @@
-/**
- * @file scheduler.cc
- * @brief 协程调度器实现
- * @version 0.1
- * @date 2021-06-15
- */
 #include "scheduler.h"
 #include "macro.h"
-// #include "hook.h"
+#include "hook.h"
 
 namespace sylar {
 
@@ -106,7 +100,7 @@ void Scheduler::stop() {
 
     /// 如果use caller，那只能由caller线程发起stop
     if (m_useCaller) {
-        SYLAR_ASSERT(GetThis() == 	this);
+        SYLAR_ASSERT(GetThis() == this);
     } else {
         SYLAR_ASSERT(GetThis() != this);
     }
@@ -137,7 +131,7 @@ void Scheduler::stop() {
 
 void Scheduler::run() {
     SYLAR_LOG_DEBUG(g_logger) << "run";
-    // set_hook_enable(true);
+    set_hook_enable(true);
     setThis();
     if (sylar::GetThreadId() != m_rootThread) {
         t_scheduler_fiber = sylar::Fiber::GetThis().get();

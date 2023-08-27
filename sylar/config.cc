@@ -1,17 +1,6 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 19:55:25
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:17:49
- * @FilePath: /sylar-huomax/sylar/config.cc
- * @Description: 配置模块实现
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
-#include "config.h"
-#include "env.h"
-#include "util.h"
-#include "log.h"
+#include "sylar/config.h"
+#include "sylar/env.h"
+#include "sylar/util.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>

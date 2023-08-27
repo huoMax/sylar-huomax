@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 19:55:03
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:11:55
- * @FilePath: /sylar-huomax/sylar/thread.h
- * @Description: 线程类封装
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #ifndef __SYLAR_THREAD_H__
 #define __SYLAR_THREAD_H__
 

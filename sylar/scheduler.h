@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 20:22:28
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:22:45
- * @FilePath: /sylar-huomax/sylar/scheduler.h
- * @Description: 调度器类封装
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #ifndef __SYLAR_SCHEDULER_H__
 #define __SYLAR_SCHEDULER_H__
 

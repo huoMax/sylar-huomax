@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 19:55:32
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:07:28
- * @FilePath: /sylar-huomax/sylar/env.h
- * @Description: 环境变量模块封装
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #ifndef __SYLAR_ENV_H__
 #define __SYLAR_ENV_H__
 

@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 20:15:10
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:21:23
- * @FilePath: /sylar-huomax/sylar/timer.cc
- * @Description: 定时器实现
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #include "timer.h"
 #include "util.h"
 #include "macro.h"

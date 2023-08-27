@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 20:21:44
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:22:13
- * @FilePath: /sylar-huomax/sylar/fiber.cc
- * @Description: 协程模块实现
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #include <atomic>
 #include "fiber.h"
 #include "config.h"
@@ -154,7 +144,7 @@ void Fiber::resume() {
     SetThis(this);
     m_state = RUNNING;
 
-    // 如果协程参与调度器调度，那么应该和调度器的主协程(每个线程独有的调度协程)进行swap，而不是线程主协程
+    // 如果协程参与调度器调度，那么应该和调度器的主协程进行swap，而不是线程主协程
     if (m_runInScheduler) {
         if (swapcontext(&(Scheduler::GetMainFiber()->m_ctx), &m_ctx)) {
             SYLAR_ASSERT2(false, "swapcontext");

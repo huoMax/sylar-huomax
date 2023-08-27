@@ -1,218 +1,79 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 19:55:07
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:12:39
- * @FilePath: /sylar-huomax/sylar/thread.cc
- * @Description: 线程类实现
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
-
-#include "timer.h"
+#include "thread.h"
+#include "log.h"
 #include "util.h"
-#include "macro.h"
 
 namespace sylar {
 
-bool Timer::Comparator::operator()(const Timer::ptr& lhs
-                        ,const Timer::ptr& rhs) const {
-    if(!lhs && !rhs) {
-        return false;
-    }
-    if(!lhs) {
-        return true;
-    }
-    if(!rhs) {
-        return false;
-    }
-    if(lhs->m_next < rhs->m_next) {
-        return true;
-    }
-    if(rhs->m_next < lhs->m_next) {
-        return false;
-    }
-    return lhs.get() < rhs.get();
+static thread_local Thread *t_thread          = nullptr;
+static thread_local std::string t_thread_name = "UNKNOW";
+
+static sylar::Logger::ptr g_logger = SYLAR_LOG_NAME("system");
+
+Thread *Thread::GetThis() {
+    return t_thread;
 }
 
-
-Timer::Timer(uint64_t ms, std::function<void()> cb,
-             bool recurring, TimerManager* manager)
-    :m_recurring(recurring)
-    ,m_ms(ms)
-    ,m_cb(cb)
-    ,m_manager(manager) {
-    m_next = sylar::GetElapsedMS() + m_ms;
+const std::string &Thread::GetName() {
+    return t_thread_name;
 }
 
-Timer::Timer(uint64_t next)
-    :m_next(next) {
-}
-
-bool Timer::cancel() {
-    TimerManager::RWMutexType::WriteLock lock(m_manager->m_mutex);
-    if(m_cb) {
-        m_cb = nullptr;
-        auto it = m_manager->m_timers.find(shared_from_this());
-        m_manager->m_timers.erase(it);
-        return true;
-    }
-    return false;
-}
-
-bool Timer::refresh() {
-    TimerManager::RWMutexType::WriteLock lock(m_manager->m_mutex);
-    if(!m_cb) {
-        return false;
-    }
-    auto it = m_manager->m_timers.find(shared_from_this());
-    if(it == m_manager->m_timers.end()) {
-        return false;
-    }
-    m_manager->m_timers.erase(it);
-    m_next = sylar::GetElapsedMS() + m_ms;
-    m_manager->m_timers.insert(shared_from_this());
-    return true;
-}
-
-bool Timer::reset(uint64_t ms, bool from_now) {
-    if(ms == m_ms && !from_now) {
-        return true;
-    }
-    TimerManager::RWMutexType::WriteLock lock(m_manager->m_mutex);
-    if(!m_cb) {
-        return false;
-    }
-    auto it = m_manager->m_timers.find(shared_from_this());
-    if(it == m_manager->m_timers.end()) {
-        return false;
-    }
-    m_manager->m_timers.erase(it);
-    uint64_t start = 0;
-    if(from_now) {
-        start = sylar::GetElapsedMS();
-    } else {
-        start = m_next - m_ms;
-    }
-    m_ms = ms;
-    m_next = start + m_ms;
-    m_manager->addTimer(shared_from_this(), lock);
-    return true;
-
-}
-
-TimerManager::TimerManager() {
-    m_previouseTime = sylar::GetElapsedMS();
-}
-
-TimerManager::~TimerManager() {
-}
-
-Timer::ptr TimerManager::addTimer(uint64_t ms, std::function<void()> cb
-                                  ,bool recurring) {
-    Timer::ptr timer(new Timer(ms, cb, recurring, this));
-    RWMutexType::WriteLock lock(m_mutex);
-    addTimer(timer, lock);
-    return timer;
-}
-
-static void OnTimer(std::weak_ptr<void> weak_cond, std::function<void()> cb) {
-    std::shared_ptr<void> tmp = weak_cond.lock();
-    if(tmp) {
-        cb();
-    }
-}
-
-Timer::ptr TimerManager::addConditionTimer(uint64_t ms, std::function<void()> cb
-                                    ,std::weak_ptr<void> weak_cond
-                                    ,bool recurring) {
-    return addTimer(ms, std::bind(&OnTimer, weak_cond, cb), recurring);
-}
-
-uint64_t TimerManager::getNextTimer() {
-    RWMutexType::ReadLock lock(m_mutex);
-    m_tickled = false;
-    if(m_timers.empty()) {
-        return ~0ull;
-    }
-
-    const Timer::ptr& next = *m_timers.begin();
-    uint64_t now_ms = sylar::GetElapsedMS();
-    if(now_ms >= next->m_next) {
-        return 0;
-    } else {
-        return next->m_next - now_ms;
-    }
-}
-
-void TimerManager::listExpiredCb(std::vector<std::function<void()> >& cbs) {
-    uint64_t now_ms = sylar::GetElapsedMS();
-    std::vector<Timer::ptr> expired;
-    {
-        RWMutexType::ReadLock lock(m_mutex);
-        if(m_timers.empty()) {
-            return;
-        }
-    }
-    RWMutexType::WriteLock lock(m_mutex);
-    if(m_timers.empty()) {
+void Thread::SetName(const std::string &name) {
+    if (name.empty()) {
         return;
     }
-    bool rollover = false;
-    if(SYLAR_UNLIKELY(detectClockRollover(now_ms))) {
-        // 使用clock_gettime(CLOCK_MONOTONIC_RAW)，应该不可能出现时间回退的问题
-        rollover = true;
+    if (t_thread) {
+        t_thread->m_name = name;
     }
-    if(!rollover && ((*m_timers.begin())->m_next > now_ms)) {
-        return;
-    }
+    t_thread_name = name;
+}
 
-    Timer::ptr now_timer(new Timer(now_ms));
-    auto it = rollover ? m_timers.end() : m_timers.lower_bound(now_timer);
-    while(it != m_timers.end() && (*it)->m_next == now_ms) {
-        ++it;
+Thread::Thread(std::function<void()> cb, const std::string &name)
+    : m_cb(cb)
+    , m_name(name) {
+    if (name.empty()) {
+        m_name = "UNKNOW";
     }
-    expired.insert(expired.begin(), m_timers.begin(), it);
-    m_timers.erase(m_timers.begin(), it);
-    cbs.reserve(expired.size());
+    int rt = pthread_create(&m_thread, nullptr, &Thread::run, this);
+    if (rt) {
+        SYLAR_LOG_ERROR(g_logger) << "pthread_create thread fail, rt=" << rt
+                                  << " name=" << name;
+        throw std::logic_error("pthread_create error");
+    }
+    m_semaphore.wait();
+}
 
-    for(auto& timer : expired) {
-        cbs.push_back(timer->m_cb);
-        if(timer->m_recurring) {
-            timer->m_next = now_ms + timer->m_ms;
-            m_timers.insert(timer);
-        } else {
-            timer->m_cb = nullptr;
+Thread::~Thread() {
+    if (m_thread) {
+        pthread_detach(m_thread);
+    }
+}
+
+void Thread::join() {
+    if (m_thread) {
+        int rt = pthread_join(m_thread, nullptr);
+        if (rt) {
+            SYLAR_LOG_ERROR(g_logger) << "pthread_join thread fail, rt=" << rt
+                                      << " name=" << m_name;
+            throw std::logic_error("pthread_join error");
         }
+        m_thread = 0;
     }
 }
 
-void TimerManager::addTimer(Timer::ptr val, RWMutexType::WriteLock& lock) {
-    auto it = m_timers.insert(val).first;
-    bool at_front = (it == m_timers.begin()) && !m_tickled;
-    if(at_front) {
-        m_tickled = true;
-    }
-    lock.unlock();
+void *Thread::run(void *arg) {
+    Thread *thread = (Thread *)arg;
+    t_thread       = thread;
+    t_thread_name  = thread->m_name;
+    thread->m_id   = sylar::GetThreadId();
+    pthread_setname_np(pthread_self(), thread->m_name.substr(0, 15).c_str());
 
-    if(at_front) {
-        onTimerInsertedAtFront();
-    }
+    std::function<void()> cb;
+    cb.swap(thread->m_cb);
+
+    thread->m_semaphore.notify();
+
+    cb();
+    return 0;
 }
 
-bool TimerManager::detectClockRollover(uint64_t now_ms) {
-    bool rollover = false;
-    if(now_ms < m_previouseTime &&
-            now_ms < (m_previouseTime - 60 * 60 * 1000)) {
-        rollover = true;
-    }
-    m_previouseTime = now_ms;
-    return rollover;
-}
-
-bool TimerManager::hasTimer() {
-    RWMutexType::ReadLock lock(m_mutex);
-    return !m_timers.empty();
-}
-
-}
+} // namespace sylar

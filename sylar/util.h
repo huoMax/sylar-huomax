@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 20:09:16
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:10:01
- * @FilePath: /sylar-huomax/sylar/util.h
- * @Description: 一些工具类封装
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #ifndef __SYLAR_UTIL_H__
 #define __SYLAR_UTIL_H__
 

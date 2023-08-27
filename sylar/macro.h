@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 20:13:02
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:15:49
- * @FilePath: /sylar-huomax/sylar/macro.h
- * @Description: 一些常用宏封装
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #ifndef __SYLAR_MACRO_H__
 #define __SYLAR_MACRO_H__
 

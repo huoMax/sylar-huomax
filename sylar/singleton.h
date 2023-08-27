@@ -1,14 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 19:54:56
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:05:10
- * @FilePath: /sylar-huomax/sylar/singleto.h
- * @Description: 单例模式封装
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
-
 #ifndef __SYLAR_SINGLETON_H__
 #define __SYLAR_SINGLETON_H__
 
@@ -29,6 +18,8 @@ std::shared_ptr<T> GetInstancePtr() {
     static std::shared_ptr<T> v(new T);
     return v;
 }
+
+
 }
 
 /**
@@ -46,11 +37,8 @@ public:
     static T* GetInstance() {
         static T v;
         return &v;
+        //return &GetInstanceX<T, X, N>();
     }
-    Singleton(const Singleton&) = delete;
-    Singleton& operator=(const Singleton&) = delete;
-private:
-    Singleton();
 };
 
 /**
@@ -68,12 +56,8 @@ public:
     static std::shared_ptr<T> GetInstance() {
         static std::shared_ptr<T> v(new T);
         return v;
+        //return GetInstancePtr<T, X, N>();
     }
-
-    SingletonPtr(const SingletonPtr&) = delete;
-    SingletonPtr& operator=(const SingletonPtr&) = delete;
-private:
-    SingletonPtr();
 };
 
 }

@@ -1,0 +1,13 @@
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_timer.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_iomanager.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_fiber2.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_fiber.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/edit_cache.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_thread.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_config.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_env.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/rebuild_cache.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_util.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_scheduler.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/test_log.dir
+/home/huomax/wgk/sylar-huomax/build/CMakeFiles/sylar.dir

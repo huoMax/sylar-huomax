@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 20:11:01
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:11:31
- * @FilePath: /sylar-huomax/sylar/fiber.h
- * @Description: 协程模块封装
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #ifndef __SYLAR_FIBER_H__
 #define __SYLAR_FIBER_H__
 

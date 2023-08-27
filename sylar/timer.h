@@ -1,13 +1,3 @@
-/*
- * @Author: huomax 630509357@qq.com
- * @Date: 2023-08-02 20:12:53
- * @LastEditors: huomax 630509357@qq.com
- * @LastEditTime: 2023-08-02 20:15:00
- * @FilePath: /sylar-huomax/sylar/timer.h
- * @Description: 定时器封装
- * 
- * Copyright (c) 2023 by huomax, All Rights Reserved. 
- */
 #ifndef __SYLAR_TIMER_H__
 #define __SYLAR_TIMER_H__
 
